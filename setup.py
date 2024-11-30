@@ -7,10 +7,11 @@ setup(
     py_modules=["cli"],             # The Python file (cli.py) containing your CLI code
     install_requires=[
         "click",
+        "python-dotenv"
     ],
     entry_points={
         "console_scripts": [
-            "advent=cli:cli",       # Command name = module:function
+            "aoc=cli:cli",       # Command name = module:function
         ],
     },
     author="BennoCrafter",
