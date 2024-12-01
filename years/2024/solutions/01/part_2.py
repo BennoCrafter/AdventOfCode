@@ -1,6 +1,6 @@
-from automation.fetcher.get_input import get_input
+from automation.get_input import get_input
 
-input = get_input(2024, 1).strip()
+input = get_input(2024, 1)
 
 def main():
     similarity_score = 0

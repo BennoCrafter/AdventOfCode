@@ -1,0 +1,6 @@
+from automation.get_input import get_input
+
+input = get_input(%s, %s)
+
+def main():
+    pass
