@@ -11,7 +11,8 @@ def get_current_day() -> int:
     return datetime.now().day
 
 def is_advent_time() -> bool:
-    return is_december and 24 <= get_current_day() <= 1
+    print(is_december(), get_current_day())
+    return is_december() and 1 <= get_current_day() <= 24
 
 def days_until_december() -> int:
     today = date.today()

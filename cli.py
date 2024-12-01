@@ -81,7 +81,7 @@ def puzzle(year, day, force):
     """Generate the Advent of Code puzzle template for a specific year and day."""
 
     # Check if it's Advent time
-    if not is_advent_time() and year is None:
+    if not is_advent_time():
         click.echo(
             f"{click.style('It\'s not Advent time yet!', fg='red')} "
             f"There are {click.style(str(days_until_december()), fg='green')} days left until December 1st."
@@ -101,6 +101,8 @@ def puzzle(year, day, force):
 
     create_puzzle_template(f"{url}/input", year, day, force)
 
+    open_puzzle(url)
+
 @cli.command()
 @click.option("--year", type=int, default=None, help="Specify the year of the Advent puzzle. Defaults to the current year.")
 @click.option("--day", type=int, default=None, help="Specify the day of the Advent puzzle. Defaults to the current day.")
@@ -113,12 +115,14 @@ def execute(year, day, part):
         click.echo(click.style("Invalid part specified! Part must be between 1 and 2.", fg="red"))
         return
 
+    click.echo(f"Executing Part {part} of puzzle for {click.style(f'Day {day}, {year}', fg='blue')}...")
+
     name = f"part_{part}.py"
 
     module = import_from_path(f"{name}", f"years/{year}/solutions/{day:02}/{name}")
 
     if hasattr(module, 'main'):
-        module.main()
+        print(module.main())
     else:
         print(f"No 'main' function found in {module.__file__}")
 
