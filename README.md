@@ -15,3 +15,20 @@ This repository provides a command-line interface (CLI) for interacting with Adv
    git clone https://github.com/BennoCrafter/AdventOfCode.git
    cd AdventOfCode
    ```
+
+2. Use command line interface:
+
+  - Build command line interface:
+    ```bash
+    pip3 install -e .
+    ```
+
+  - Run cli:
+    ```bash
+    aoc --help
+    ```
+
+  - Run cli without building:
+    ```bash
+    python3 cli.py --help
+    ```

@@ -5,7 +5,6 @@ import click
 from automation.utils.importer import import_from_path
 
 
-
 def get_result(year: int, day: int, part: int) -> tuple[Any, float]:
     name = f"part_{part}.py"
     module = import_from_path(f"{name}", f"years/{year}/solutions/{day:02}/{name}")
