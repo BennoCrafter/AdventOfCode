@@ -4,6 +4,7 @@ from automation.puzzle import create_puzzle_template, open_puzzle
 from automation.utils.date_utils import get_current_year, get_current_day, is_advent_time, days_until_december
 from automation.utils.importer import import_from_path
 from automation.compare import get_comparison
+from automation.utils.write_to_env import write_to_env
 
 base_url = "https://adventofcode.com/%s/day/%s"
 
@@ -49,7 +50,7 @@ def execute(year, day, part):
     day = day or get_current_day()
 
     if part not in [1, 2]:
-        click.echo(click.style("Invalid part specified! Part must be between 1 and 2.", fg="red"))
+        click.echo(click.style("Invalid part specified! Part must be 1 or 2.", fg="red"))
         return
 
     click.echo(f"Executing Part {part} of puzzle for {click.style(f'Day {day}, {year}', fg='blue')}...")
@@ -66,6 +67,14 @@ def execute(year, day, part):
         click.echo(click.style(f"Result: {result}", fg="blue"))
     else:
         print(f"No 'main' function found in {module.__file__}")
+
+@cli.command()
+@click.argument('key')
+@click.argument('value')
+def set(key: str, value: str):
+    """Set an environment variable in the .env file."""
+    write_to_env(key, value)
+    click.echo(f"Set {key}={value} in .env file.")
 
 
 if __name__ == "__main__":

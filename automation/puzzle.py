@@ -52,7 +52,7 @@ def create_puzzle_template(input_url: str, year: int, day: int, is_forced: bool)
     puzzle_dir_path.mkdir(parents=True)
 
     # Create part_1.py and part_2.py files
-    for part in range(1, 3):
+    for part in [1, 2]:
         part_file_path = puzzle_dir_path / f"part_{part}.py"
         write_file(part_file_path, read_file(puzzle_template_path) % (year, day))
 
