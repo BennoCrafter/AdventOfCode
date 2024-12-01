@@ -6,7 +6,7 @@ from automation.fetch_input import fetch_input
 from automation.utils.read_file import read_file
 from automation.utils.write_file import write_file
 
-def create_input_file(year: int, day: int, inputs_dir_path: Path, puzzle_name: str) -> bool:
+def create_input_file(year: int, day: int, inputs_file_path: Path) -> bool:
     try:
         input_data = fetch_input(year, day)
     except Exception as e:
@@ -14,11 +14,10 @@ def create_input_file(year: int, day: int, inputs_dir_path: Path, puzzle_name: s
         return False
 
     # Create input.txt file
-    p = inputs_dir_path / f"input_{puzzle_name}.txt"
-    if p.exists():
+    if inputs_file_path.exists():
         return True
 
-    write_file(p, input_data)
+    write_file(inputs_file_path, input_data)
     return True
 
 def open_puzzle(url: str):
@@ -41,9 +40,12 @@ def create_puzzle_template(input_url: str, year: int, day: int, is_forced: bool)
 
     puzzle_dir_path = solutions_dir_path / puzzle_name
 
+    inputs_file_path = inputs_dir_path / f"input_{puzzle_name}.txt"
 
+    if is_forced and not puzzle_dir_path.exists():
+        inputs_file_path.unlink()
 
-    if not create_input_file(year, day, inputs_dir_path, puzzle_name):
+    if not create_input_file(year, day, inputs_file_path):
         return
 
     # Handle forced overwriting

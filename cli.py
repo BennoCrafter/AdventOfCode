@@ -1,12 +1,17 @@
 import click
-import time
+import urllib.request
+import os
+from dotenv import load_dotenv
 from automation.puzzle import create_puzzle_template, open_puzzle
 from automation.utils.date_utils import get_current_year, get_current_day, is_advent_time, days_until_december
-from automation.utils.importer import import_from_path
 from automation.compare import get_comparison
+from automation.get_result import get_result
 from automation.utils.write_to_env import write_to_env
 
 base_url = "https://adventofcode.com/%s/day/%s"
+load_dotenv()
+
+AOC_SESSION = os.getenv("AOC_SESSION")
 
 @click.group()
 def cli():
@@ -41,9 +46,9 @@ def puzzle(year, day, force, open):
         open_puzzle(url)
 
 @cli.command()
-@click.option("--year", type=int, default=None, help="Specify the year of the Advent puzzle. Defaults to the current year.")
-@click.option("--day", type=int, default=None, help="Specify the day of the Advent puzzle. Defaults to the current day.")
-@click.option("--part", type=int, default=1, help="Specify the part of which the Advent puzzle should get executed. Defaults to 1")
+@click.option("--year", "-y", type=int, default=None, help="Specify the year of the Advent puzzle. Defaults to the current year.")
+@click.option("--day", "-d", type=int, default=None, help="Specify the day of the Advent puzzle. Defaults to the current day.")
+@click.option("--part", "-p", type=int, default=1, help="Specify the part of which the Advent puzzle should get executed. Defaults to 1")
 def run(year, day, part):
     """Execute an Advent puzzle."""
     year = year or get_current_year()
@@ -55,18 +60,10 @@ def run(year, day, part):
 
     click.echo(f"Running Part {part} of puzzle for {click.style(f'Day {day}, {year}', fg='blue')}...")
 
-    name = f"part_{part}.py"
-    module = import_from_path(f"{name}", f"years/{year}/solutions/{day:02}/{name}")
+    result, elapsed_time = get_result(year, day, part)
 
-    if hasattr(module, 'main'):
-        start_time = time.time()
-        result = module.main()
-        end_time = time.time()
-
-        click.echo(click.style(f"Execution time: {(end_time - start_time):.5f} seconds. Equivalent to {get_comparison(end_time - start_time)[1]}", fg="green"))
-        click.echo(click.style(f"Result: {result}", fg="blue"))
-    else:
-        print(f"No 'main' function found in {module.__file__}")
+    click.echo(click.style(f"Execution time: {elapsed_time:.5f} seconds. Equivalent to {get_comparison(elapsed_time)[1]}", fg="green"))
+    click.echo(click.style(f"Result: {result}", fg="blue"))
 
 @cli.command()
 @click.argument('key')
@@ -75,6 +72,30 @@ def set(key: str, value: str):
     """Set an environment variable in the .env file."""
     write_to_env(key, value)
     click.echo(f"Set {key}={value} in .env file.")
+
+@cli.command()
+@click.option("--year", "-y", type=int, default=None, help="Specify the year of the Advent puzzle. Defaults to the current year.")
+@click.option("--day", "-d", type=int, default=None, help="Specify the day of the Advent puzzle. Defaults to the current day.")
+@click.option("--part", "-p", type=int, default=1, help="Specify the part of the Advent puzzle. Defaults to 1")
+def submit(year, day, part):
+    year = year or get_current_year()
+    day = day or get_current_day()
+
+    result, elapsed_time = get_result(year, day, part)
+
+    if elapsed_time == float("inf"):
+        return
+
+    headers = {"Cookie": f"session={AOC_SESSION}"}
+    request = urllib.request.Request(
+        f"https://adventofcode.com/{year}/day/{day}/answer",
+        headers=headers,
+        method="POST",
+        data=f"level={part}&answer={result}".encode("ascii"),
+    )
+    response = urllib.request.urlopen(request)
+    data = response.read().decode("utf-8")
+    print(data)
 
 
 if __name__ == "__main__":
