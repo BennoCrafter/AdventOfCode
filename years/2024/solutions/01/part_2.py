@@ -1,8 +1,9 @@
+from typing import Any
 from automation.get_input import get_input
 
-input = get_input(2024, 1)
+input: str = get_input(2024, 1)
 
-def main():
+def main() -> Any:
     similarity_score = 0
     left_side: list[int] = []
     right_side: list[int] = []

@@ -1,7 +1,9 @@
 import click
+import time
 from automation.puzzle import create_puzzle_template, open_puzzle
 from automation.utils.date_utils import get_current_year, get_current_day, is_advent_time, days_until_december
 from automation.utils.importer import import_from_path
+from automation.compare import get_comparison
 
 base_url = "https://adventofcode.com/%s/day/%s"
 
@@ -56,7 +58,12 @@ def execute(year, day, part):
     module = import_from_path(f"{name}", f"years/{year}/solutions/{day:02}/{name}")
 
     if hasattr(module, 'main'):
-        print(module.main())
+        start_time = time.time()
+        result = module.main()
+        end_time = time.time()
+
+        click.echo(click.style(f"Execution time: {(end_time - start_time):.5f} seconds. Equivalent to {get_comparison(end_time - start_time)[1]}", fg="green"))
+        click.echo(click.style(f"Result: {result}", fg="blue"))
     else:
         print(f"No 'main' function found in {module.__file__}")
 

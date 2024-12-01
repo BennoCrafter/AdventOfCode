@@ -1,6 +1,7 @@
+from typing import Any
 from automation.get_input import get_input
 
-input = get_input(%s, %s)
+input: str = get_input(%s, %s)
 
-def main():
-    pass
+def main() -> Any:
+    return
