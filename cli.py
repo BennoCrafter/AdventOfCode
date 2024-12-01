@@ -45,7 +45,7 @@ def puzzle(year, day, force, open):
 @click.option("--day", type=int, default=None, help="Specify the day of the Advent puzzle. Defaults to the current day.")
 @click.option("--part", type=int, default=1, help="Specify the part of which the Advent puzzle should get executed. Defaults to 1")
 def execute(year, day, part):
-    """Execute the specified part of the Advent puzzle."""
+    """Execute an Advent puzzle."""
     year = year or get_current_year()
     day = day or get_current_day()
 
