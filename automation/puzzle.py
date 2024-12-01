@@ -14,7 +14,11 @@ def create_input_file(year: int, day: int, inputs_dir_path: Path, puzzle_name: s
         return False
 
     # Create input.txt file
-    write_file(inputs_dir_path / f"input_{puzzle_name}.txt", input_data)
+    p = inputs_dir_path / f"input_{puzzle_name}.txt"
+    if p.exists():
+        return True
+
+    write_file(p, input_data)
     return True
 
 def open_puzzle(url: str):
@@ -36,6 +40,8 @@ def create_puzzle_template(input_url: str, year: int, day: int, is_forced: bool)
     inputs_dir_path.mkdir(parents=True, exist_ok=True)
 
     puzzle_dir_path = solutions_dir_path / puzzle_name
+
+
 
     if not create_input_file(year, day, inputs_dir_path, puzzle_name):
         return

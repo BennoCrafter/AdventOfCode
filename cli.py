@@ -34,7 +34,7 @@ def puzzle(year, day, force, open):
         return
 
     url = base_url % (year, day)
-    click.echo(f"Generating puzzle for {click.style(f'Day {day}, {year}', fg='blue')}...")
+    click.echo(click.style(f"== 🎄 Advent of Code {year} - Day {day} 🎁 == \n", fg="green", bold=True))
 
     create_puzzle_template(f"{url}/input", year, day, force)
     if open:
@@ -44,7 +44,7 @@ def puzzle(year, day, force, open):
 @click.option("--year", type=int, default=None, help="Specify the year of the Advent puzzle. Defaults to the current year.")
 @click.option("--day", type=int, default=None, help="Specify the day of the Advent puzzle. Defaults to the current day.")
 @click.option("--part", type=int, default=1, help="Specify the part of which the Advent puzzle should get executed. Defaults to 1")
-def execute(year, day, part):
+def run(year, day, part):
     """Execute an Advent puzzle."""
     year = year or get_current_year()
     day = day or get_current_day()
@@ -53,7 +53,7 @@ def execute(year, day, part):
         click.echo(click.style("Invalid part specified! Part must be 1 or 2.", fg="red"))
         return
 
-    click.echo(f"Executing Part {part} of puzzle for {click.style(f'Day {day}, {year}', fg='blue')}...")
+    click.echo(f"Running Part {part} of puzzle for {click.style(f'Day {day}, {year}', fg='blue')}...")
 
     name = f"part_{part}.py"
     module = import_from_path(f"{name}", f"years/{year}/solutions/{day:02}/{name}")
