@@ -3,6 +3,7 @@ import shutil
 import click
 from pathlib import Path
 from automation.fetch_input import fetch_input
+from automation.utils.read_file import read_file
 from automation.utils.write_file import write_file
 
 
@@ -49,11 +50,12 @@ def create_puzzle_template(input_url: str, year: int, day: int, is_forced: bool)
         click.echo(click.style(f"Error fetching input: {str(e)}", fg="red"))
         return
 
-    write_file(inputs_dir_path, puzzle_name, input_data)
+    # Create input.txt file
+    write_file(inputs_dir_path / f"input_{puzzle_name}.txt", input_data)
 
     # Create part_1.py and part_2.py files
     for part in range(1, 3):
-        part_file = puzzle_dir_path / f"part_{part}.py"
-        shutil.copy(puzzle_template_path, part_file)
+        part_file_path = puzzle_dir_path / f"part_{part}.py"
+        write_file(part_file_path, read_file(puzzle_template_path) % (year, day))
 
     click.echo(click.style(f"Puzzle template created for Year {year}, Day {day}!", fg="green"))

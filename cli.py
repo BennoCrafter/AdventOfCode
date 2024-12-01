@@ -10,10 +10,11 @@ def cli():
     pass
 
 @cli.command()
-@click.option("--year", type=int, default=None, help="Specify the year of the Advent puzzle. Defaults to the current year.")
-@click.option("--day", type=int, default=None, help="Specify the day of the Advent puzzle. Defaults to the current day.")
-@click.option("--force", type=bool, default=False, is_flag=True, help="Specify if should force overwrite if needed.")
-def puzzle(year, day, force):
+@click.option("--year", "-y", type=int, default=None, help="Specify the year of the Advent puzzle. Defaults to the current year.")
+@click.option("--day", "-d", type=int, default=None, help="Specify the day of the Advent puzzle. Defaults to the current day.")
+@click.option("--force", "-f", type=bool, default=False, is_flag=True, help="Specify if should force overwrite if needed.")
+@click.option("--open", "-o", type=bool, default=False, is_flag=True, help="Whether to open the file in the browser.")
+def puzzle(year, day, force, open):
     """Generate the Advent of Code puzzle template for a specific year and day."""
     if not is_advent_time():
         click.echo(
@@ -33,7 +34,8 @@ def puzzle(year, day, force):
     click.echo(f"Generating puzzle for {click.style(f'Day {day}, {year}', fg='blue')}...")
 
     create_puzzle_template(f"{url}/input", year, day, force)
-    open_puzzle(url)
+    if open:
+        open_puzzle(url)
 
 @cli.command()
 @click.option("--year", type=int, default=None, help="Specify the year of the Advent puzzle. Defaults to the current year.")

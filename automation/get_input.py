@@ -13,6 +13,6 @@ def get_input(year: int, day: int) -> str:
 
     if not p.exists():
         click.echo(click.style(f"Input file for Day {day}, {year} does not exist! Generating it..", fg="yellow"))
-        write_file(inputs_dir_path, puzzle_name, fetch_input(year, day))
+        write_file(p, fetch_input(year, day))
 
     return read_file(p).strip()
