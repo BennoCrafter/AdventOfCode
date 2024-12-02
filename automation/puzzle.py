@@ -6,6 +6,9 @@ from automation.fetch_input import fetch_input
 from automation.utils.read_file import read_file
 from automation.utils.write_file import write_file
 
+puzzle_template_path = Path("assets/puzzle_template.txt")
+
+
 def create_input_file(year: int, day: int, inputs_file_path: Path) -> bool:
     try:
         input_data = fetch_input(year, day)
@@ -27,7 +30,6 @@ def open_puzzle(url: str):
 def create_puzzle_template(input_url: str, year: int, day: int, is_forced: bool):
     """Create the puzzle template (folders and files) for a given year and day."""
     puzzle_name = f"{day:02}"
-    puzzle_template_path = Path("assets/puzzle_template.txt")
 
     year_dir_path = Path(f"years/{year}")
     year_dir_path.mkdir(parents=True, exist_ok=True)

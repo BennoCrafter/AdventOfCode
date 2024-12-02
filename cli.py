@@ -4,7 +4,6 @@ import os
 from dotenv import load_dotenv
 from automation.puzzle import create_puzzle_template, open_puzzle
 from automation.utils.date_utils import get_current_year, get_current_day, is_advent_time, days_until_december
-from automation.compare import get_comparison
 from automation.get_result import get_result
 from automation.utils.write_to_env import write_to_env
 
@@ -57,7 +56,7 @@ def run(year, day, part):
 
     result, elapsed_time = get_result(year, day, part)
 
-    click.echo(click.style(f"Execution time: {(elapsed_time * 1000):.2f} ms. Equivalent to {get_comparison(elapsed_time)[1]}", fg="green"))
+    click.echo(click.style(f"Run time: {(elapsed_time * 1000):.2f} ms", fg="green"))
     click.echo(click.style(f"Result: {result}", fg="blue"))
 
 @cli.command()
