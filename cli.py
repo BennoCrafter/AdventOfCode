@@ -1,11 +1,13 @@
 import click
 import urllib.request
 import os
+import subprocess
 from dotenv import load_dotenv
 from automation.puzzle import create_puzzle_template, open_puzzle
 from automation.utils.date_utils import get_current_year, get_current_day, is_advent_time, days_until_december
 from automation.get_result import get_result
 from automation.utils.write_to_env import write_to_env
+from pathlib import Path
 
 base_url = "https://adventofcode.com/%s/day/%s"
 load_dotenv()
@@ -66,6 +68,17 @@ def set(key: str, value: str):
     """Set an environment variable in the .env file."""
     write_to_env(key, value)
     click.echo(f"Set {key}={value} in .env file.")
+
+@cli.command()
+@click.option("--year", "-y", type=int, default=get_current_year(), help="Specify the year of the Advent puzzle. Defaults to the current year.")
+@click.option("--day", "-d", type=int, default=get_current_day(), help="Specify the day of the Advent puzzle. Defaults to the current day.")
+def commit(year, day):
+    """Commit a new puzzle"""
+
+    p = Path(f"years/{year}/solutions/{day}")
+    subprocess.run(["git", "add", p])
+    subprocess.run(["git", "commit", "-m", f"Added solution for day {day} of year {year}"])
+    subprocess.run(["git", "push"])
 
 @cli.command()
 @click.option("--year", "-y", type=int, default=get_current_year(), help="Specify the year of the Advent puzzle. Defaults to the current year.")
