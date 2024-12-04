@@ -1,8 +1,10 @@
 import importlib.util
 import sys
 from types import ModuleType
+from pathlib import Path
 
-def import_from_path(module_name: str, file_path: str) -> ModuleType:
+
+def import_from_path(module_name: str, file_path: Path) -> ModuleType:
     """Import a module given its name and file path."""
     spec = importlib.util.spec_from_file_location(module_name, file_path)
 
