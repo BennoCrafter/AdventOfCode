@@ -83,7 +83,7 @@ def set(key: str, value: str, file: str):
 @click.option("--day", "-d", type=int, default=get_current_day(), help="Specify the day of the Advent puzzle. Defaults to the current day.")
 def commit(year, day):
     """Commit a new puzzle"""
-    p = Path(f"years/{year}/solutions/{day}")
+    p = Path(f"years/{year}/solutions/{day:02}")
     subprocess.run(["git", "add", p])
     subprocess.run(["git", "commit", "-m", f"Added solution for day {day} of year {year}"])
     subprocess.run(["git", "push"])

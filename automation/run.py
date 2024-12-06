@@ -17,13 +17,16 @@ class Run:
     def time_in_s(self) -> float:
         return self.time_in_ms() / 1000
 
+    def time_in_min(self) -> float:
+        return self.time_in_s() / 60
+
     def formatted_time(self) -> str:
         if self.time_in_s() < 1:
             return f"{self.time_in_ms():.2f} ms"
         elif self.time_in_s() < 60:
             return f"{self.time_in_s():.2f} s"
         else:
-            return f"{self.time_in_s():.2f} min"
+            return f"{self.time_in_min():.2f} min"
 
     def display(self) -> str:
         if self.error:
