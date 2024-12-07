@@ -18,7 +18,6 @@ def main() -> Any:
     found_loops = 0
     max_iterations = width * height
 
-    # Find the guard position once outside the loop
     guard_position = get_position_of_guard(grid)
 
     for i in range(len(grid)):
@@ -28,7 +27,7 @@ def main() -> Any:
             position = guard_position
             visited = set()
 
-            if (j, i) == guard_position:
+            if (j, i) == guard_position or grid[i][j] == "#":
                 continue
 
             new_grid = [row.copy() for row in grid]
@@ -41,15 +40,12 @@ def main() -> Any:
                 if iterations > max_iterations:
                     raise RuntimeError("Infinite loop detected")
 
-                # Calculate the next position based on the current direction
                 calculated_next_pos = (position[0] + directions[current_direction][0], position[1] + directions[current_direction][1])
 
-                # Check if the next position is out of bounds
                 if calculated_next_pos[0] < 0 or calculated_next_pos[0] >= width or \
                    calculated_next_pos[1] < 0 or calculated_next_pos[1] >= height:
                     break
 
-                # Check the item at the next position
                 item_at_new_pos = new_grid[calculated_next_pos[1]][calculated_next_pos[0]]
                 if item_at_new_pos != "#":
                     position = calculated_next_pos
@@ -57,10 +53,10 @@ def main() -> Any:
                         visited.add((position, current_direction))
                         continue
                     else:
-                        found_loop = True  # We found a loop
+                        found_loop = True
                         break
 
-                current_direction = (current_direction + 1) % len(directions)  # Turn right
+                current_direction = (current_direction + 1) % len(directions)
 
             if found_loop:
                 found_loops += 1

@@ -7,7 +7,7 @@ import time
 
 class PythonRunner(Runner):
     def run(self) -> Run:
-        module = import_from_path(self.file_path.name, self.file_path)
+        module = import_from_path(self.file_path.name, self.file_path.absolute())
 
         if hasattr(module, 'main'):
             start_time = time.perf_counter_ns()

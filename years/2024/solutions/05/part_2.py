@@ -1,49 +1,77 @@
+from collections import defaultdict, deque
 from typing import Any
 from automation.get_input import get_input
 
-input: str = get_input(2024, 5)
+def is_valid_order(pages, rules):
+    page_positions = {page: i for i, page in enumerate(pages)}
 
+    for before in rules:
+        if before in page_positions:
+            for after in rules[before]:
+                if after in page_positions:
+                    if page_positions[before] > page_positions[after]:
+                        return False
+    return True
 
-class Rule:
-    def __init__(self, num: str, not_exceed: list[str]):
-        self.num = num
-        self.not_exceed = not_exceed
+def topological_sort(pages, rules):
+    """
+    Topological sort using Kahn's algorithm
 
-def get_rule(rules: list[Rule], num: str) -> Rule | None:
-    for rule in rules:
-        if rule.num == num:
-            return rule
-    return None
+    wiki: https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
+    """
 
+    adj = defaultdict(set)
+    in_degree = {page: 0 for page in pages}
+
+    for before in rules:
+        if before in pages:
+            for after in rules[before]:
+                if after in pages:
+                    adj[before].add(after)
+                    in_degree[after] += 1
+
+    queue = deque([page for page in pages if in_degree[page] == 0])
+    result = []
+
+    while queue:
+        page = queue.popleft()
+        result.append(page)
+
+        for neighbor in adj[page]:
+            in_degree[neighbor] -= 1
+
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+
+    return result if len(result) == len(pages) else None
+
+def part_2(rules, updates):
+    result = 0
+
+    for update in updates:
+        if not is_valid_order(update, rules):
+            pages = topological_sort(set(update), rules)
+
+            if pages:
+                middle_idx = len(pages) // 2
+                result += pages[middle_idx]
+
+    return result
 
 def main() -> Any:
-    page_ordering_rules, updates = input.split("\n\n")
-    rules: list[Rule] = []
-    invalid_updates: list[list[str]] = []
+    splitted = get_input(2024, 5).split("\n\n")
 
-    for por in page_ordering_rules.split("\n"):
-        num, not_exceed = por.split("|")
+    rules = {}
+    for rule in splitted[0].split("\n"):
+        before, after = map(int, rule.split("|"))
+        if before not in rules:
+            rules[before] = set()
 
-        fr = get_rule(rules, num)
-        if fr == None:
-            rules.append(Rule(num, [not_exceed]))
-        else:
-            fr.not_exceed.append(not_exceed)
+        rules[before].add(after)
 
-    for update in updates.split("\n"):
-        nums: list[str] = update.split(",")
-        is_valid = True
+    updates = []
+    for update in splitted[1].split("\n"):
+        if update:
+            updates.append([int(x) for x in update.split(',')])
 
-        for i, num in enumerate(nums):
-            rule = get_rule(rules, num)
-            if rule == None:
-                continue
-
-            if any(item in nums[:i] for item in rule.not_exceed):
-                is_valid = False
-                break
-
-        if not is_valid:
-            invalid_updates.append(nums)
-
-    return sum(int(vu[len(vu)//2]) for vu in invalid_updates)
+    return part_2(rules, updates)

@@ -11,7 +11,6 @@ from automation.utils.write_to_env import write_to_env
 from pathlib import Path
 import json
 import atexit
-import time
 
 base_url = "https://adventofcode.com/%s/day/%s"
 runs: list[Run] = []

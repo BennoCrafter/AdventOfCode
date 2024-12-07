@@ -16,7 +16,7 @@ def main() -> Any:
     left_side.sort()
     right_side.sort()
 
-    for index, (left, right) in enumerate(zip(left_side, right_side)):
+    for index, (left, right) in enumerate((left_side, right_side)):
         total_distance += abs(left - right)
 
     return total_distance
